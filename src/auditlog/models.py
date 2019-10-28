@@ -171,15 +171,24 @@ class LogEntry(models.Model):
             (DELETE, _("delete")),
         )
 
+    # HTTP content_type ?
     content_type = models.ForeignKey(to='contenttypes.ContentType', on_delete=models.CASCADE, related_name='+', verbose_name=_("content type"))
+    # 对象主键
     object_pk = models.CharField(db_index=True, max_length=255, verbose_name=_("object pk"))
+    # 对象ID
     object_id = models.BigIntegerField(blank=True, db_index=True, null=True, verbose_name=_("object id"))
+    # 对象表现名称
     object_repr = models.TextField(verbose_name=_("object representation"))
+    # 操作：创建、更新、删除
     action = models.PositiveSmallIntegerField(choices=Action.choices, verbose_name=_("action"))
+    # 修改内容？
     changes = models.TextField(blank=True, verbose_name=_("change message"))
+    # 操作者？
     actor = models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True, related_name='+', verbose_name=_("actor"))
+    # 远端地址
     remote_addr = models.GenericIPAddressField(blank=True, null=True, verbose_name=_("remote address"))
     timestamp = models.DateTimeField(auto_now_add=True, verbose_name=_("timestamp"))
+    # 额外的数据
     additional_data = JSONField(blank=True, null=True, verbose_name=_("additional data"))
 
     objects = LogEntryManager()
